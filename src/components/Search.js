@@ -1,10 +1,9 @@
-import './App.css';
-import { Provider, useDispatch, connect } from 'react-redux';
-import configureStore from './state-management/store/configureStore';
-import { search, searchSuccess } from './state-management/actions/search';
+import { useDispatch, connect } from 'react-redux';
+import configureStore from '../state-management/store/configureStore';
+import { search, searchSuccess } from '../state-management/actions/search';
 import { useEffect } from 'react';
 import { useState } from 'react';
-import { SEARCH_SUCCESS } from './state-management/constants/search';
+import { SEARCH_SUCCESS } from '../state-management/constants/search';
 
 const store = configureStore();
 
@@ -15,6 +14,12 @@ function SearchComponent({ results, search }) {
   useEffect(() => {
     search(searchTerm);
 
+    //WITHOUT MIDDLEWARES
+
+    dispatch({
+      type: SEARCH_SUCCESS,
+      results: [],
+    });
   }, [searchTerm])
   return (
     <>
@@ -40,12 +45,12 @@ const mapStateToProps = (state, props) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+  // search: (searchTerm) => dispatch(searchSuccess(searchTerm)),
   search: (searchTerm) => dispatch(search(searchTerm)),
 });
 
 
-const ConnectedSearchComponent = connect(mapStateToProps, mapDispatchToProps)(SearchComponent);
+export default connect(mapStateToProps, mapDispatchToProps)(SearchComponent);
 
 
-const App = () => (<Provider store={store}><ConnectedSearchComponent /></Provider>);
-export default App;
+
